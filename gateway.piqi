@@ -1,0 +1,81 @@
+.erlang-type-prefix ""
+.protobuf-package "com.generated.gateway"
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Common:
+
+.alias [ .name service-id .type string ]
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.enum [
+    .name error
+    .option [ .name internal-error ]
+    .option [ .name invalid-request ]
+    .option [ .name not-implemented ]
+    .option [ .name service-unknown ]
+    .option [ .name service-enabled ]
+    .option [ .name service-disabled ]
+    .option [ .name service-unavailable ]
+]
+
+.record [
+    .name service-event
+    .field [ .name service .type service-id .required ]
+    .field [ .name payload .type binary .required ]
+]
+
+.variant [
+    .name gateway-event
+    .option [ .name service-disabled .type service-id ]
+]
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Gateway requests:
+
+.record [
+    .name login
+    .field [ .name userid .type string .required ]
+    .field [ .name passwd .type string .optional ]
+]
+
+.record [
+    .name service-enable
+    .field [ .name service .type service-id .required ]
+]
+
+.record [
+    .name service-disable
+    .field [ .name service .type service-id .required ]
+]
+
+.record [
+    .name service-request
+    .field [ .name service .type service-id .required ]
+    .field [ .name payload .type binary .required ]
+]
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Interface definition:
+
+.variant [
+    .name client2gateway
+    .option [ .type login ]
+    .option [ .type service-enable ]
+    .option [ .type service-disable ]
+    .option [ .type service-request ]
+]
+
+.variant [
+    .name gateway2client
+    .option [ .name ok ]
+    .option [ .name error            .type error ]
+    .option [ .name service-event    .type service-event ]
+    .option [ .name gateway-event    .type gateway-event ]
+    .option [ .name service-response .type binary ]
+]
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
